@@ -1,0 +1,5 @@
+create-jdbc-connection-pool --datasourceclassname org.postgresql.ds.PGSimpleDataSource --restype javax.sql.DataSource pg_pool
+set resources.jdbc-connection-pool.pg_pool.property.password=${ENV=POSTGRES_PASSWORD} resources.jdbc-connection-pool.pg_pool.property.databaseName=postgres resources.jdbc-connection-pool.pg_pool.property.serverName=db resources.jdbc-connection-pool.pg_pool.property.user=postgres resources.jdbc-connection-pool.pg_pool.property.portNumber=5432
+
+create-jdbc-resource --enabled=true --poolName=pg_pool --target=domain jdbc/userdb
+create-resource-ref --enabled=true --target=server jdbc/userdb

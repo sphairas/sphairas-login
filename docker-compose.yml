@@ -1,0 +1,24 @@
+version: '3.3'
+services:
+  app:
+    build: .
+    image: "sphairas/login:dev"
+    ports:
+      - "8080:8080"
+      - "59009:59009"
+    environment:
+      - "JVM_ARGS=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:59009"
+      - "PAYARA_ARGS=--debug"
+    env_file:
+      - "docker.env"
+  db:
+    image: "postgres:13.0"
+    restart: always
+    volumes:
+      - "postgres-data:/var/lib/postgresql/data"
+    env_file:
+      - "docker.env"
+    ports:
+      - "5432:5432"
+volumes:
+  postgres-data:

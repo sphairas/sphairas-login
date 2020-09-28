@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
+<resources>
+<!--    <jdbc-connection-pool 
+        datasource-classname="org.postgresql.ds.PGSimpleDataSource"
+        name="userdb_pool"
+        res-type="javax.sql.DataSource">
+        <property name="URL" value="jdbc:postgresql://db:5432/postgres"/>
+        <property name="User" value="postgres"/>
+        <property name="Password" value="${ENV=POSTGRES_PASSWORD}"/>
+    </jdbc-connection-pool>
+    <jdbc-resource 
+        jndi-name="jdbc/userdb" 
+        pool-name="userdb_pool">        
+    </jdbc-resource>-->
+</resources>

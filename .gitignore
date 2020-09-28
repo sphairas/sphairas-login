@@ -1,0 +1,3 @@
+/target/
+/docker.env
+/postgresql-42.2.16.jar
