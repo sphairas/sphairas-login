@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -73,11 +74,10 @@ public class SigneeEntity implements Serializable {
     public SigneeEntity() {
     }
 
-    public SigneeEntity(final Signee signee, final String commonName) {
+    public SigneeEntity(final Signee signee) {
         this.prefix = signee.getId();
         this.suffix = signee.getAuthority();
         this.alias = signee.isAlias();
-        this.fullName = commonName;
     }
 
     public Signee getSignee() {
@@ -92,12 +92,24 @@ public class SigneeEntity implements Serializable {
         this.fullName = fn;
     }
 
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
     public String[] getGroups() {
         return Optional.ofNullable(groups)
                 .map(s -> Arrays.stream(s.split(",")).filter(v -> !v.isBlank()))
                 .map(s -> Stream.concat(Stream.of("signees"), s))
                 .map(s -> s.toArray(String[]::new))
                 .orElse(null);
+    }
+
+    public void setGroups(final String[] arr) {
+        groups = Arrays.stream(arr).map(String::strip).collect(Collectors.joining(","));
     }
 
     public Set<EmbeddableMarker> getMarkerSet() {
