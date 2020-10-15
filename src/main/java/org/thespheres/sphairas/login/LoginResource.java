@@ -5,24 +5,14 @@
  */
 package org.thespheres.sphairas.login;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.io.DecodingException;
-import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.WeakKeyException;
 import java.io.IOException;
-import java.security.Key;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import javax.ws.rs.GET;
@@ -44,6 +34,8 @@ public class LoginResource {
 //    private UriInfo context;
     @Inject
     private PasswordAuthentication pwAuth;
+    @Inject
+    private JWTContext jwtContext;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -60,27 +52,7 @@ public class LoginResource {
             resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return null;
         }
-        //        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-//        KeyPair kp = Keys.keyPairFor(SignatureAlgorithm.RS512);
-//        byte[] encoded = key.getEncoded();
-//        String secret = Encoders.BASE64.encode(encoded);
-        final Key key = getkey();
-
-        final LocalDateTime now = LocalDateTime.now();
-        final Date iat = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
-        final LocalDateTime expldt = now.plusMonths(1l);
-        final Date exp = Date.from(expldt.atZone(ZoneId.systemDefault()).toInstant());
-
-        final String jws = Jwts.builder()
-                .setHeaderParam("kid", "app") //Key ID
-                .setSubject(req.getAccount()) //sub
-                //                .setIssuer(ISSUER)  //iss, not mandatory
-                .setIssuedAt(iat) //iat
-                .setExpiration(exp) //exp
-                .claim("_couchdb.roles", List.of("signee"))
-                .signWith(key).compact();
-        ret.setJwt(jws);
-        ret.setExp(exp.getTime());
+        jwtContext.sign(req.getAccount(), ret);
         final String api = System.getenv("API_BASE_URL");
         ret.setApi(api);
         return ret;
@@ -103,9 +75,9 @@ public class LoginResource {
         }
         final String subject;
         try {
-            subject = parseToken(token);
-        } catch (final JwtException ex) {
-            resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+            subject = jwtContext.parseToken(token, null);
+        } catch (final JwtException | LoginException ex) {
+            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return null;
         }
         final UserResponse ret;
@@ -120,19 +92,4 @@ public class LoginResource {
         return ret;
     }
 
-    private static String parseToken(final String jwt) throws JwtException {
-        Key key = getkey();
-        final Claims claims = Jwts.parserBuilder()
-                //                    .requireIssuer(authToken)
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(jwt)
-                .getBody();
-        return claims.getSubject();
-    }
-
-    private static Key getkey() throws WeakKeyException, DecodingException {
-        final String sk = System.getenv("SECRET_KEY");
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(sk));
-    }
 }

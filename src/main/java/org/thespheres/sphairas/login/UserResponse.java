@@ -5,10 +5,16 @@
  */
 package org.thespheres.sphairas.login;
 
+import javax.json.bind.annotation.JsonbCreator;
+import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbPropertyOrder;
+import javax.json.bind.config.PropertyOrderStrategy;
+
 /**
  *
  * @author boris.heithecker@gmx.net
  */
+@JsonbPropertyOrder(PropertyOrderStrategy.ANY)
 public class UserResponse {
 
     protected String db;
@@ -16,41 +22,42 @@ public class UserResponse {
     protected String user;
     protected String name;
 
-    public UserResponse() {
-    }
-
-    UserResponse(final String user) {
+    @JsonbCreator
+    public UserResponse(@JsonbProperty("user") final String user) {
         this.user = user;
     }
 
-    public String getDb() {
-        return db;
-    }
-
-    public void setDb(String db) {
-        this.db = db;
-    }
-
-    public String getApi() {
-        return api;
-    }
-
-    public void setApi(String api) {
-        this.api = api;
-    }
-
+    @JsonbProperty("user")
     public String getUser() {
         return user;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    @JsonbProperty("db")
+    public String getDb() {
+        return db;
     }
 
+    @JsonbProperty("db")
+    public void setDb(final String db) {
+        this.db = db;
+    }
+
+    @JsonbProperty("api")
+    public String getApi() {
+        return api;
+    }
+
+    @JsonbProperty("api")
+    public void setApi(final String api) {
+        this.api = api;
+    }
+
+    @JsonbProperty("name")
     public String getName() {
         return name;
     }
 
+    @JsonbProperty("name")
     public void setName(String name) {
         this.name = name;
     }

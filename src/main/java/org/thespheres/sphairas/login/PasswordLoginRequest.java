@@ -5,10 +5,14 @@
  */
 package org.thespheres.sphairas.login;
 
+import javax.json.bind.annotation.JsonbPropertyOrder;
+import javax.json.bind.config.PropertyOrderStrategy;
+
 /**
  *
  * @author boris
  */
+@JsonbPropertyOrder(PropertyOrderStrategy.ANY)
 public final class PasswordLoginRequest {
 
     private String account;
