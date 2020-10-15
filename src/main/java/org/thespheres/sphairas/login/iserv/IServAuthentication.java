@@ -80,14 +80,21 @@ public class IServAuthentication implements PasswordAuthentication {
             throw new LoginException();
         }
         final LoginResponse ret = new LoginResponse(account);
-        final String db = manager.getSigneeProperties(account).get("couchdb");
-        ret.setDb(db);
+        populateResponse(account, ret);
         return ret;
     }
 
     @Override
-    public UserResponse getUserInfo(final String subject) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public UserResponse getUserInfo(final String account) throws Exception {
+        final UserResponse ret = new UserResponse(account);
+        populateResponse(account, ret);
+        return ret;
     }
 
+    void populateResponse(final String account, final UserResponse ret) {
+        final String db = manager.getSigneeProperties(account).get("couchdb");
+        ret.setDb(db);
+        final String name = manager.getSigneeName(account);
+        ret.setName(name);
+    }
 }
