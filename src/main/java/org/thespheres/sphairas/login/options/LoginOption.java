@@ -5,6 +5,8 @@
  */
 package org.thespheres.sphairas.login.options;
 
+import javax.json.bind.annotation.JsonbProperty;
+
 /**
  *
  * @author boris.heithecker@gmx.net
@@ -17,8 +19,8 @@ public abstract class LoginOption {
         this.type = type;
     }
 
+    @JsonbProperty("type")
     public String getType() {
         return type;
     }
-
 }

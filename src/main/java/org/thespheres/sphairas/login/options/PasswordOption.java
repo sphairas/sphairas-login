@@ -5,10 +5,15 @@
  */
 package org.thespheres.sphairas.login.options;
 
+import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbPropertyOrder;
+import javax.json.bind.config.PropertyOrderStrategy;
+
 /**
  *
  * @author boris.heithecker@gmx.net
  */
+@JsonbPropertyOrder(PropertyOrderStrategy.ANY)
 public class PasswordOption extends LoginOption {
 
     private String userHint;
@@ -18,18 +23,22 @@ public class PasswordOption extends LoginOption {
         super("password");
     }
 
+    @JsonbProperty("user-hint")
     public String getUserHint() {
         return userHint;
     }
 
-    public void setUserHint(String userHint) {
+    @JsonbProperty("user-hint")
+    public void setUserHint(final String userHint) {
         this.userHint = userHint;
     }
 
+    @JsonbProperty("href")
     public String getHref() {
         return href;
     }
 
+    @JsonbProperty("href")
     public void setHref(String href) {
         this.href = href;
     }

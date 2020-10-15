@@ -24,7 +24,7 @@ public class OptionsResource {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)  
     @Produces(MediaType.APPLICATION_JSON)
-    public LoginOption[] options(@QueryParam("login_key") final String key, @Context HttpServletResponse resp) throws IOException {
+    public PasswordOption[] options(@QueryParam("login_key") final String key, @Context HttpServletResponse resp) throws IOException {
         String loginKey = System.getenv("LOGIN_KEY");
         if (key == null || loginKey == null || !Objects.equals(key, loginKey)) {
 //            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -33,6 +33,6 @@ public class OptionsResource {
         final String hint = "Das sphairas-Passwort";
         final PasswordOption option = new PasswordOption();
         option.setUserHint(hint);
-        return new LoginOption[]{option};
+        return new PasswordOption[]{option};
     }
 }
